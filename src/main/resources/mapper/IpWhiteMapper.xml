@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ylms.mapper.IpWhiteMapper">
+
+	<resultMap id="rsIpWhite" type="com.ylms.entity.IpWhite">
+		<result property="id" column="id" />
+		<result property="ipWhite" column="ip_white" />
+	</resultMap>
+
+	<sql id="sql_column_items">
+		id,
+		ip_white
+	</sql>
+
+
+	<select id="findById" resultMap="rsIpWhite"
+		parameterType="java.lang.Long">
+		select
+		<include refid="sql_column_items" />
+		from ipwhite
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+
+	<select id="findAll" resultMap="rsIpWhite">
+		select
+		<include refid="sql_column_items" />
+		from ipwhite
+		<where>
+			<if test="IpWhite != null and IpWhite.id != null ">
+				and id = #{IpWhite.id}
+			</if>
+			<if test="IpWhite != null and IpWhite.ipWhite != null ">
+				and ip_white = #{IpWhite.ipWhite}
+			</if>
+		</where>
+		<if test="order != null and order != '' ">
+			order by ${order} ${sort}
+		</if>
+	</select>
+
+	<insert id="add" parameterType="com.ylms.entity.IpWhite">
+		insert into ipwhite
+		(
+		ip_white
+		)
+		values
+		(
+		#{ipWhite, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.ylms.entity.IpWhite">
+		update ipwhite
+		<set>
+			<if test=" ipWhite != null ">ip_white = #{ipWhite, jdbcType=VARCHAR}</if>
+		</set>
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from ipwhite
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+
+</mapper>

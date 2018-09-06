@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ylms.mapper.UserMapper">
+	
+	<resultMap id="rsUser" type="com.ylms.entity.User">
+		<result property="id" column="id" />
+		<result property="openId" column="open_id" />
+		<result property="scanNumber" column="scan_number" />
+		<result property="presenterState" column="presenter_state" />
+	</resultMap>
+	
+	<sql id="sql_column_items">
+		id, 
+		open_id,
+		scan_number, 
+		presenter_state
+	</sql>
+	
+	
+	<select id="findByOpenId" resultMap="rsUser" parameterType="java.lang.String">
+		select  <include refid="sql_column_items"/> from user
+		<where>
+			open_id = #{openId}
+		</where>
+	</select>
+	
+	
+	<select id="findList" resultMap="rsUser">
+		select  <include refid="sql_column_items"/> from user
+		<where>
+			<if test="User != null and User.id != null ">  
+				and id = #{User.id}
+			</if>
+			<if test="User != null and User.openId != null ">
+				and open_id = #{User.openId}
+			</if>
+			<if test="User != null and User.scanNumber != null ">  
+				and scan_number = #{User.scanNumber}
+			</if>
+			<if test="User != null and User.presenterState != null ">  
+				and presenter_state = #{User.presenterState}
+			</if>
+		</where>
+		<if test="order != null and order != '' ">  
+			order by ${order} ${sort}
+		</if>
+	</select>
+	
+	<insert id="add" parameterType="com.ylms.entity.User">
+		insert into user 
+			(
+			open_id,
+			scan_number,
+			presenter_state
+			)
+		values
+			(
+			#{openId, jdbcType=VARCHAR},
+			0,
+			1
+			)
+	</insert>
+	
+	<update id="update" parameterType="com.ylms.entity.User">
+		update user
+			 <set> 
+				<if test=" openId != null ">open_id = #{openId, jdbcType=VARCHAR}, </if>
+				<if test=" scanNumber != null ">scan_number = #{scanNumber, jdbcType=INTEGER}, </if>
+				<if test=" presenterState != null ">presenter_state = #{presenterState, jdbcType=INTEGER} </if>
+		     </set>
+			 <where>
+				ID = #{id}
+			 </where>
+	</update>
+	
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from user
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+	<delete id="deleteByOpenId" parameterType="String">
+		delete from user
+		<where>
+			open_id = #{openId}
+		</where>
+	</delete>
+	
+</mapper>
